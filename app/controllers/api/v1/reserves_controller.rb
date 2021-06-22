@@ -1,0 +1,55 @@
+module Api
+  module V1
+    class ReservesController < ApplicationController
+        before_action :set_reserve, only: %i[show update destroy]
+
+        def index
+          reserves = Reserve.order(created_at: :desc)
+          render json: { status: 200, message: 'Loaded reserves', data: reserves }
+        end
+
+        def show
+          render json: { status: 200, message: 'Loaded the reserve', data: @reserve }
+        end
+
+        def create
+          @reserve = Reserve.new(reserve_params)
+          if @reserve.save
+            render json: { status: 200, message: "Created SUCCESS", data: @reserve }
+          else
+            render json: { status: 'ERROR', data: @reserve.errors }
+          end
+        end
+
+        def update
+          if @reserve.update(reserve_params)
+            render json: { status: 200, message: 'Updated the reserve', data: @reserve }
+          else
+            render json: { status: 'ERROR', message: 'Not updated', data: @reserve.errors }
+          end
+        end
+
+        def destroy
+          @reserve.destroy
+          render json: { status: 200, message: 'Deleted the reserve', data: @reserve }
+        end
+
+        private
+
+        # Use callbacks to share common setup or constraints between actions.
+        def set_reserve
+          @reserve = Reserve.find(params[:id])
+        end
+
+        # Only allow a list of trusted parameters through.
+        def reserve_params
+          params
+            # .require(:reserve)
+            .permit(
+              :event_id,
+              :user_id
+            )
+        end
+    end
+  end
+end

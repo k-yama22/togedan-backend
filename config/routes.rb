@@ -4,8 +4,16 @@ Rails.application.routes.draw do
   }
   namespace 'api' do
     namespace 'v1' do
-      resources :events
-      resources :reserves
+      resources :events do
+        member do
+          get 'own'
+        end
+      end
+      resources :reserves do
+        member do
+          get 'events'
+        end
+      end
     end
   end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html

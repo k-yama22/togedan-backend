@@ -12,6 +12,11 @@ module Api
         render json: { status: 200, message: 'Loaded the event', data: @event }
       end
 
+      def own
+        @my_events = Event.where(user_id: params[:id])
+        render json: { status: 200, message: 'Loaded the my events', data: @my_events }
+      end
+
       def create
         @event = Event.new(event_params)
         if @event.save
@@ -46,6 +51,7 @@ module Api
         params
           .require(:event)
           .permit(
+            :user_id,
             :event_name,
             :genre,
             :location,

@@ -17,6 +17,12 @@ module Api
         render json: { status: 200, message: 'Loaded the my events', data: @my_events }
       end
 
+      def history
+        @my_events = Event.where(user_id: params[:id])
+        @my_history = @my_events.where(event_date: Date.today..)
+        render json: { status: 200, message: 'Loaded the my events', data: @my_history }
+      end
+
       def create
         @event = Event.new(event_params)
         if @event.save

@@ -57,7 +57,8 @@ module Api
           .require(:reserve)
           .permit(
             :event_id,
-            :user_id
+            :user_id,
+            :reserve_sts
           )
       end
     end

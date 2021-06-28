@@ -13,7 +13,7 @@ module Api
       end
 
       def own
-        @my_events = Event.where(user_id: params[:id])
+        @my_events = Event.where(user_id: params[:id], event_sts: "1")
         render json: { status: 200, message: 'Loaded the my events', data: @my_events }
       end
 
@@ -66,6 +66,7 @@ module Api
             :end_time,
             :event_message,
             :max_people,
+            :event_sts,
           )
       end
     end

@@ -22,6 +22,12 @@ module Api
         render json: { status: 200, message: 'Loaded the reserved events', data: @events }
       end
 
+      def cancel
+        @reserve = Reserve.find_by(user_id: reserve_params[:user_id], event_id: reserve_params[:event_id])
+        @reserve.destroy
+        render json: { status: 200, message: 'Cancel the reserve', data: @reserve }
+      end
+
       def create
         @reserve = Reserve.new(reserve_params)
         @event = Event.find(@reserve.event_id)

@@ -8,11 +8,13 @@ Rails.application.routes.draw do
         member do
           get 'own'
           get 'history'
+          post 'cancel'
         end
       end
       resources :reserves do
         member do
           get 'events'
+          post 'cancel'
         end
       end
     end

@@ -23,6 +23,12 @@ module Api
         render json: { status: 200, message: 'Loaded the my events', data: @my_history }
       end
 
+      def cancel
+        @event = Event.find_by(user_id: event_params[:user_id], id: event_params[:id])
+        @event.destroy
+        render json: { status: 200, message: 'Cancel the event', data: @event }
+      end
+
       def create
         @event = Event.new(event_params)
         if @event.save
@@ -57,6 +63,7 @@ module Api
         params
           .require(:event)
           .permit(
+            :id,
             :user_id,
             :event_name,
             :genre,

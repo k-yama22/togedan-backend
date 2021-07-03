@@ -17,4 +17,15 @@
 #  user_id       :string
 #
 class Event < ApplicationRecord
+  validates :user_id, presence: true, length: {maximum: 10}
+  validates :event_name, presence: true, length: {maximum: 30}
+  validates :genre, presence: true, length: {maximum: 20}
+  validates :location, presence: true, length: {maximum: 20}
+  validates :event_date, presence: true
+  validates :start_time, presence: true
+  validates :end_time, presence: true
+  validates :event_message, length: {maximum: 255}
+  validates :max_people, length: {maximum: 3}
+  validates :event_sts, presence: true
+
 end

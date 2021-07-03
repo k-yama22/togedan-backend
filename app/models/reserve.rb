@@ -10,4 +10,8 @@
 #  user_id     :string
 #
 class Reserve < ApplicationRecord
+  validates :event_id, presence: true, length: {maximum: 10}
+  validates :user_id, presence: true, length: {maximum: 10}
+  validates :reserve_sts, presence: true
+
 end

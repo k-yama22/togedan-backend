@@ -31,8 +31,12 @@ module Api
       def create
         @reserve = Reserve.new(reserve_params)
         @event = Event.find(@reserve.event_id)
+        # 登録する予約情報が既に存在するかチェック用
+        @blank_check_reserve = Reserve.find_by(event_id: @reserve.event_id, user_id: @reserve.user_id)
         if @event.user_id == @reserve.user_id
           render json: { status: 400, message: "自身で登録したイベントを予約することはできません", data: @reserve.errors }
+        elsif @blank_check_reserve
+          render json: { status: 400, message: "既に予約済みです", data: @reserve }
         elsif @reserve.save
           render json: { status: 200, message: "Created SUCCESS", data: @reserve }
         else

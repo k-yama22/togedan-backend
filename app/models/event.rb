@@ -17,6 +17,8 @@
 #  user_id       :string
 #
 class Event < ApplicationRecord
+  include ActiveModel::Validations
+  validates_with DoubleCheckValidator
   validates :user_id, presence: true, length: {maximum: 10}
   validates :event_name, presence: true, length: {maximum: 30}
   validates :genre, presence: true, length: {maximum: 20}

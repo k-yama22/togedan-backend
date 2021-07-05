@@ -33,7 +33,10 @@ module Api
         @event = Event.new(event_params)
         now = Time.now
         today = Date.today;
-        if today > @event.event_date
+        @check_event = Event.where(event_date: @event.event_date, start_time: @event.start_time.strftime('%H:%M')..@event.end_time.strftime('%H:%M'),end_time: @event.start_time.strftime('%H:%M')..@event.end_time.strftime('%H:%M'))
+        if !@check_event.blank?
+          render json: { status: 400, message: "既に登録済みのイベントと時間が重なっているため登録できません", data: @check_event }
+        elsif today > @event.event_date
           render json: { status: 400, message: "過去日は登録できません", data: @event }
         elsif today == @event.event_date && now.strftime('%H:%M') > @event.start_time.strftime('%H:%M')
           render json: { status: 400, message: "過去の時刻は登録できません", data: @event }

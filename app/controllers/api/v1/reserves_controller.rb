@@ -5,11 +5,11 @@ module Api
 
       def index
         reserves = Reserve.order(created_at: :desc)
-        render json: { status: 200, message: 'Loaded reserves', data: reserves }
+        render json: { status: 200, message: '予約情報の取得に成功しました。', data: reserves }
       end
 
       def show
-        render json: { status: 200, message: 'Loaded the reserve', data: @reserve }
+        render json: { status: 200, message: '予約情報の取得に成功しました。', data: @reserve }
       end
 
       def events
@@ -19,13 +19,13 @@ module Api
           result = Event.find(id.event_id)
             @events.push(result)
         end
-        render json: { status: 200, message: 'Loaded the reserved events', data: @events }
+        render json: { status: 200, message: '予約情報の取得に成功しました。', data: @events }
       end
 
       def cancel
         @reserve = Reserve.find_by(user_id: reserve_params[:user_id], event_id: reserve_params[:event_id])
         @reserve.destroy
-        render json: { status: 200, message: 'Cancel the reserve', data: @reserve }
+        render json: { status: 200, message: '予約キャンセルが完了しました。', data: @reserve }
       end
 
       def create
@@ -38,23 +38,23 @@ module Api
         elsif @blank_check_reserve
           render json: { status: 400, message: "既に予約済みです", data: @reserve }
         elsif @reserve.save
-          render json: { status: 200, message: "Created SUCCESS", data: @reserve }
+          render json: { status: 200, message: "予約が完了しました。", data: @reserve }
         else
-          render json: { status: 'ERROR', data: @reserve.errors }
+          render json: { status: 'ERROR', message: "予約に失敗しました。", data: @reserve.errors }
         end
       end
 
       def update
         if @reserve.update(reserve_params)
-          render json: { status: 200, message: 'Updated the reserve', data: @reserve }
+          render json: { status: 200, message: '予約情報の更新が完了しました。', data: @reserve }
         else
-          render json: { status: 'ERROR', message: 'Not updated', data: @reserve.errors }
+          render json: { status: 'ERROR', message: '予約情報の更新に失敗しました。', data: @reserve.errors }
         end
       end
 
       def destroy
         @reserve.destroy
-        render json: { status: 200, message: 'Deleted the reserve', data: @reserve }
+        render json: { status: 200, message: '予約情報の削除が完了しました。', data: @reserve }
       end
 
       private

@@ -31,24 +31,19 @@ module Api
 
       def create
         @event = Event.new(event_params)
-        now = Time.now
-        today = Date.today;
-        if today > @event.event_date
-          render json: { status: 400, message: "過去日は登録できません", data: @event }
-        elsif today == @event.event_date && now.strftime('%H:%M') > @event.start_time.strftime('%H:%M')
-          render json: { status: 400, message: "過去の時刻は登録できません", data: @event }
-        elsif @event.save
-          render json: { status: 200, message: "Created SUCCESS", data: @event }
+
+        if @event.save
+          render json: { status: 200, message: "登録が完了しました。", data: @event }
         else
-          render json: { status: 'ERROR', data: @event.errors }
+          render json: { status: 422, data: @event.errors }
         end
       end
 
       def update
         if @event.update(event_params)
-          render json: { status: 200, message: 'Updated the event', data: @event }
+          render json: { status: 200, message: '更新が完了しました', data: @event }
         else
-          render json: { status: 'ERROR', message: 'Not updated', data: @event.errors }
+          render json: { status: 422, message: '更新に失敗しました', data: @event.errors }
         end
       end
 

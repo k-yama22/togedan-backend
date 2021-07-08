@@ -2,6 +2,7 @@ module Api
   module V1
     class EventsController < ApplicationController
       before_action :set_event, only: %i[show update destroy]
+      before_action :authenticate_user!, except: %i[index show]
 
       def index
         events = Event.order(created_at: :desc)
@@ -31,11 +32,12 @@ module Api
 
       def create
         @event = Event.new(event_params)
-
-        if @event.save
+        if @event.invalid?
+          render json: { status: 422, data: @event.errors }
+        elsif @event.save
           render json: { status: 200, message: "登録が完了しました。", data: @event }
         else
-          render json: { status: 422, data: @event.errors }
+          render json: { status: "ERROR", data: @event.errors }
         end
       end
 

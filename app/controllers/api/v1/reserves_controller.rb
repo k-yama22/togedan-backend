@@ -2,7 +2,8 @@ module Api
   module V1
     class ReservesController < ApplicationController
       before_action :set_reserve, only: %i[show update destroy]
-
+      before_action :authenticate_user!, except: %i[index show]
+      
       def index
         reserves = Reserve.order(created_at: :desc)
         render json: { status: 200, message: '予約情報の取得に成功しました。', data: reserves }

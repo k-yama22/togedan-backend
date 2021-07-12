@@ -2,7 +2,7 @@ module Api
   module V1
     class EventsController < ApplicationController
       before_action :set_event, only: %i[show update destroy]
-      before_action :authenticate_user!, except: %i[index show]
+      before_action :authenticate_user!, except: %i[index show search]
 
       def index
         events = Event.order(created_at: :desc)
@@ -22,6 +22,13 @@ module Api
         @my_events = Event.where(user_id: params[:id])
         @my_history = @my_events.where(event_date: Date.today..)
         render json: { status: 200, message: 'Loaded the my events', data: @my_history }
+      end
+
+      def search
+        genre = event_params[:genre]
+        location = event_params[:location]
+        @events = Event.where('genre LIKE(?) and location LIKE(?)', "%#{genre}%", "%#{location}%")
+        render json: { status: 200, message: '検索が完了しました', data: @events }
       end
 
       def cancel

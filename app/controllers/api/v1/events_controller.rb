@@ -27,7 +27,8 @@ module Api
       def search
         genre = event_params[:genre]
         location = event_params[:location]
-        @events = Event.where('genre LIKE(?) and location LIKE(?)', "%#{genre}%", "%#{location}%")
+        event_date = event_params[:event_date]
+        @events = Event.where('genre LIKE(?) and location LIKE(?) and event_date = (?)', "%#{genre}%", "%#{location}%", "%#{event_date}%")
         render json: { status: 200, message: '検索が完了しました', data: @events }
       end
 

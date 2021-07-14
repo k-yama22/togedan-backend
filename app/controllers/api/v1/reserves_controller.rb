@@ -3,7 +3,7 @@ module Api
     class ReservesController < ApplicationController
       before_action :set_reserve, only: %i[show update destroy]
       before_action :authenticate_user!, except: %i[index show]
-      
+
       def index
         reserves = Reserve.order(created_at: :desc)
         render json: { status: 200, message: '予約情報の取得に成功しました。', data: reserves }
@@ -17,7 +17,7 @@ module Api
         @reserves = Reserve.where(user_id: params[:id])
         @events = []
         for id in @reserves do
-          result = Event.find(id.event_id)
+          result = User.joins(:events).select("users.image,users.id, events.id AS event_id,events.event_name,events.genre,events.location,events.event_date,events.start_time,events.end_time,events.event_message,events.max_people").find_by(events: {id: id})
             @events.push(result)
         end
         render json: { status: 200, message: '予約情報の取得に成功しました。', data: @events }

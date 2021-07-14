@@ -14,7 +14,7 @@
 #  start_time    :time
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  user_id       :string
+#  user_id       :integer
 #
 class Event < ApplicationRecord
   include ActiveModel::Validations
@@ -32,4 +32,5 @@ class Event < ApplicationRecord
   validates :max_people, length: {maximum: 3}
   validates :event_sts, presence: true
 
+  belongs_to :user
 end

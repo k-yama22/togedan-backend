@@ -6,10 +6,12 @@ module Api
 
       def index
         events = Event.order(created_at: :desc)
-        render json: { status: 200, message: 'Loaded events', data: events }
+        users = User.joins(:events).select("users.image,users.id, events.id AS event_id,events.event_name,events.genre,events.location,events.event_date,events.start_time,events.end_time,events.event_message,events.max_people")
+        render json: { status: 200, message: 'Loaded events', data: users }
       end
 
       def show
+        @event = User.joins(:events).select("users.image,users.id, events.id AS event_id,events.event_name,events.genre,events.location,events.event_date,events.start_time,events.end_time,events.event_message,events.max_people").find_by(events: {id: params[:id]})
         render json: { status: 200, message: 'Loaded the event', data: @event }
       end
 

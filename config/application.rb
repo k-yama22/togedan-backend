@@ -30,8 +30,10 @@ module TogedanBackend
     # in config/environments, which are processed later.
     #
     # config.time_zone = "Central Time (US & Canada)"
+    config.time_zone = 'Tokyo'
+    config.active_record.default_timezone = :local
     # config.eager_load_paths << Rails.root.join("extras")
-
+    # config.action_controller.permit_all_parameters = true
     # Only loads a smaller set of middleware suitable for API only apps.
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.

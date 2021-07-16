@@ -31,8 +31,8 @@ ActiveRecord::Schema.define(version: 2021_06_22_121720) do
   end
 
   create_table "reserves", force: :cascade do |t|
-    t.string "event_id"
-    t.string "user_id"
+    t.integer "event_id"
+    t.integer "user_id"
     t.string "reserve_sts"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

@@ -6,8 +6,8 @@
 #  reserve_sts :string
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
-#  event_id    :string
-#  user_id     :string
+#  event_id    :integer
+#  user_id     :integer
 #
 class Reserve < ApplicationRecord
   validates :event_id, presence: true, length: {maximum: 10}

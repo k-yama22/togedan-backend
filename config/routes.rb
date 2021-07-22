@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       resources :reserves do
         member do
           get 'events'
+          post 'event'
           post 'cancel'
         end
       end

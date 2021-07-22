@@ -19,8 +19,23 @@ module Api
         for id in @reserves do
           result = User.joins(:events).select("users.image,users.id, events.id AS event_id,events.event_name,events.genre,events.location,events.event_date,events.start_time,events.end_time,events.event_message,events.max_people").find_by(events: {id: id.event_id})
           @events.push(result)
+          # if @events.length > 2
+          #   break
+          # end
         end
         render json: { status: 200, message: '予約情報の取得に成功しました。', data: @events }
+      end
+
+      def event
+        event_id = reserve_params[:event_id]
+        user_id = reserve_params[:user_id]
+        @reserve = Reserve.find_by(event_id: event_id, user_id: user_id)
+        if @reserve
+          @event = User.joins(:events).select("users.image,users.id, events.id AS event_id,events.event_name,events.genre,events.location,events.event_date,events.start_time,events.end_time,events.event_message,events.max_people").find_by(events: {id: @reserve.event_id})
+          render json: { status: 200, message: '詳細情報の取得に成功しました。', data: @event }
+        else
+          render json: { status: "ERROR", message: '詳細情報の取得に失敗しました。', data: @reserve.errors }
+        end
       end
 
       def cancel

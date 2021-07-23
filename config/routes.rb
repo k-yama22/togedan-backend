@@ -8,6 +8,7 @@ Rails.application.routes.draw do
         member do
           get 'own'
           get 'history'
+          post 'detail'
           post 'search'
           post 'cancel'
         end

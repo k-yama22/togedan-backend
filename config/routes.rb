@@ -16,6 +16,7 @@ Rails.application.routes.draw do
       resources :reserves do
         member do
           get 'events'
+          get 'history'
           post 'event'
           post 'cancel'
         end

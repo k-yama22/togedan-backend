@@ -15,14 +15,15 @@ module Api
 
       def events
         @reserves = Reserve.where(user_id: params[:id])
-        @events = []
+        @events_arr = []
         for id in @reserves do
           result = User.joins(:events).select("users.image,users.id, events.id AS event_id,events.event_name,events.genre,events.location,events.event_date,events.start_time,events.end_time,events.event_message,events.max_people").find_by(events: {id: id.event_id})
-          @events.push(result)
+          @events_arr.push(result)
           # if @events.length > 2
           #   break
           # end
         end
+        @events = @events_arr.select{|a| a[:event_date] >= Date.today}
         render json: { status: 200, message: '予約情報の取得に成功しました。', data: @events }
       end
 
@@ -36,6 +37,18 @@ module Api
         else
           render json: { status: "ERROR", message: '詳細情報の取得に失敗しました。', data: @reserve.errors }
         end
+      end
+
+      def history
+        @reserves = Reserve.where(user_id: params[:id])
+        # @my_history = @my_events.where(events: {event_date: ..Date.today})
+        @events = []
+        for id in @reserves do
+          result = User.joins(:events).select("users.image,users.id, events.id AS event_id,events.event_name,events.genre,events.location,events.event_date,events.start_time,events.end_time,events.event_message,events.max_people").find_by(events: {id: id.event_id})
+          @events.push(result)
+        end
+        @reserved_history = @events.select{|a| a[:event_date] < Date.today}
+        render json: { status: 200, message: '予約情報の取得に成功しました。', data: @reserved_history }
       end
 
       def cancel

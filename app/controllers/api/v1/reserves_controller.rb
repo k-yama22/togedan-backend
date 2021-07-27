@@ -14,10 +14,10 @@ module Api
       end
 
       def events
-        @reserves = Reserve.where(user_id: params[:id])
+        @reserves = Reserve.where(user_id: params[:id], reserve_sts: "1")
         @events_arr = []
         for id in @reserves do
-          result = User.joins(:events).select("users.image,users.id, events.id AS event_id,events.event_name,events.genre,events.location,events.event_date,events.start_time,events.end_time,events.event_message,events.max_people").find_by(events: {id: id.event_id})
+          result = User.joins(:events).select("users.image, users.id, events.id AS event_id, events.event_name, events.genre, events.location, events.event_date, events.start_time, events.end_time, events.event_message, events.max_people").find_by(events: {id: id.event_id})
           @events_arr.push(result)
           # if @events.length > 2
           #   break
@@ -30,7 +30,7 @@ module Api
       def event
         event_id = reserve_params[:event_id]
         user_id = reserve_params[:user_id]
-        @reserve = Reserve.find_by(event_id: event_id, user_id: user_id)
+        @reserve = Reserve.find_by(event_id: event_id, user_id: user_id, reserve_sts: "1")
         if @reserve
           @event = User.joins(:events).select("users.image,users.id, events.id AS event_id,events.event_name,events.genre,events.location,events.event_date,events.start_time,events.end_time,events.event_message,events.max_people").find_by(events: {id: @reserve.event_id})
           render json: { status: 200, message: '詳細情報の取得に成功しました。', data: @event }
@@ -53,7 +53,8 @@ module Api
 
       def cancel
         @reserve = Reserve.find_by(user_id: reserve_params[:user_id], event_id: reserve_params[:event_id])
-        @reserve.destroy
+        # @reserve.destroy
+        @reserve.update(reserve_sts: "2")
         render json: { status: 200, message: '予約キャンセルが完了しました。', data: @reserve }
       end
 
@@ -61,7 +62,7 @@ module Api
         @reserve = Reserve.new(reserve_params)
         @event = Event.find(@reserve.event_id)
         # 登録する予約情報が既に存在するかチェック用
-        @blank_check_reserve = Reserve.find_by(event_id: @reserve.event_id, user_id: @reserve.user_id)
+        @blank_check_reserve = Reserve.find_by(event_id: @reserve.event_id, user_id: @reserve.user_id, reserve_sts: "1")
         if @event.user_id == @reserve.user_id
           render json: { status: 400, message: "自身で登録したイベントを予約することはできません", data: @reserve.errors }
         elsif @blank_check_reserve

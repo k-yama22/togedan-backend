@@ -6,7 +6,7 @@ module Api
 
       def index
         events = Event.order(created_at: :desc)
-        users = User.joins(:events).select("users.image,users.id, events.id AS event_id,events.event_name,events.genre,events.location,events.event_date,events.start_time,events.end_time,events.event_message,events.max_people")
+        users = User.joins(:events).select("users.image,users.id, events.id AS event_id,events.event_name,events.genre,events.location,events.event_date,events.start_time,events.end_time,events.event_message,events.max_people").where(events: {event_sts: "1"})
         render json: { status: 200, message: 'Loaded events', data: users }
       end
 
@@ -22,7 +22,7 @@ module Api
       end
 
       def history
-        @my_events = User.joins(:events).select("users.image,users.id, events.id AS event_id,events.event_name,events.genre,events.location,events.event_date,events.start_time,events.end_time,events.event_message,events.max_people").where(events: {user_id: params[:id]})
+        @my_events = User.joins(:events).select("users.image,users.id, events.id AS event_id,events.event_name,events.genre,events.location,events.event_date,events.start_time,events.end_time,events.event_message,events.max_people").where(events: {user_id: params[:id], event_sts: "1"})
         @my_history = @my_events.where(events: {event_date: ...Date.today})
         render json: { status: 200, message: 'Loaded the my events', data: @my_history }
       end
@@ -37,10 +37,10 @@ module Api
         location = event_params[:location]
         event_date = event_params[:event_date]
         if event_date.nil?
-          @events = User.joins(:events).select("users.image,users.id, events.id AS event_id,events.event_name,events.genre,events.location,events.event_date,events.start_time,events.end_time,events.event_message,events.max_people").where('genre LIKE(?) and location LIKE(?)', "%#{genre}%", "%#{location}%")
+          @events = User.joins(:events).select("users.image,users.id, events.id AS event_id,events.event_name,events.genre,events.location,events.event_date,events.start_time,events.end_time,events.event_message,events.max_people").where('genre LIKE(?) and location LIKE(?) and event_sts = ?', "%#{genre}%", "%#{location}%", "1")
           # @events = Event.where('genre LIKE(?) and location LIKE(?)', "%#{genre}%", "%#{location}%")
         else
-          @events = User.joins(:events).select("users.image,users.id, events.id AS event_id,events.event_name,events.genre,events.location,events.event_date,events.start_time,events.end_time,events.event_message,events.max_people").where('genre LIKE(?) and location LIKE(?) and event_date = (?)', "%#{genre}%", "%#{location}%", "%#{event_date}%")
+          @events = User.joins(:events).select("users.image,users.id, events.id AS event_id,events.event_name,events.genre,events.location,events.event_date,events.start_time,events.end_time,events.event_message,events.max_people").where('genre LIKE(?) and location LIKE(?) and event_date = (?) and event_sts = ?', "%#{genre}%", "%#{location}%", "%#{event_date}%", "1")
           # @events = Event.where('genre LIKE(?) and location LIKE(?) and event_date = (?)', "%#{genre}%", "%#{location}%", "%#{event_date}%")
         end
         # @events = Event.where('genre LIKE(?) and location LIKE(?) and event_date = (?)', "%#{genre}%", "%#{location}%", "%#{event_date}%")
@@ -49,7 +49,8 @@ module Api
 
       def cancel
         @event = Event.find_by(user_id: event_params[:user_id], id: event_params[:id])
-        @event.destroy
+        @event.update(event_sts: "2")
+        # @event.destroy
         render json: { status: 200, message: 'Cancel the event', data: @event }
       end
 

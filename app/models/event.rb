@@ -30,7 +30,7 @@ class Event < ApplicationRecord
   validates :end_time, presence: true
   validates :event_message, length: {maximum: 255}
   validates :max_people, length: {maximum: 3}
-  validates :event_sts, presence: true
+  validates :event_sts, presence: true, length: {is: 1}
 
   belongs_to :user
 end

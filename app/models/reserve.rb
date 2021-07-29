@@ -12,6 +12,6 @@
 class Reserve < ApplicationRecord
   validates :event_id, presence: true, length: {maximum: 10}
   validates :user_id, presence: true, length: {maximum: 10}
-  validates :reserve_sts, presence: true
+  validates :reserve_sts, presence: true, length: {is: 1}
 
 end

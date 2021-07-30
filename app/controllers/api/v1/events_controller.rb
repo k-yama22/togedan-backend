@@ -57,11 +57,11 @@ module Api
       def create
         @event = Event.new(event_params)
         if @event.invalid?
-          render json: { status: 422, data: @event.errors }
+          render json: { status: 400, data: @event.errors.full_messages }
         elsif @event.save
           render json: { status: 200, message: "登録が完了しました。", data: @event }
         else
-          render json: { status: "ERROR", data: @event.errors }
+          render json: { status: "ERROR", message: "登録が失敗しました。" ,data: @event.errors }
         end
       end
 

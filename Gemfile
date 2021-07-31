@@ -29,6 +29,8 @@ gem 'rack-cors'
 gem 'devise'
 gem 'devise_token_auth'
 
+gem 'rails-i18n'
+
 # Use carrierwave
 gem 'carrierwave'
 

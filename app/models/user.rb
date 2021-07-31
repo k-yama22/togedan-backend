@@ -48,4 +48,13 @@ class User < ActiveRecord::Base
 
   mount_uploader :image, ImageUploader
   has_many :events
+
+  validates :last_name, presence: true, length: {maximum: 20}
+  validates :first_name, presence: true, length: {maximum: 20}
+  validates :last_name_kana, presence: true, length: {maximum: 40}, format: { with: /\A[\p{katakana}\p{blank}ー－]+\z/}
+  validates :first_name_kana, presence: true, length: {maximum: 40}, format: { with: /\A[\p{katakana}\p{blank}ー－]+\z/}
+  validates :email, presence: true, length: {maximum: 100}
+  validates :introduce, presence: true, length: {maximum: 255}
+
+
 end

@@ -2,8 +2,11 @@ ja:
   activerecord:
     models:
       event: イベント情報
+      user: ユーザ情報
+      reserve: 予約情報
     attributes:
       event:
+        user_id: ユーザーID
         event_name: イベント名称
         genre: ジャンル
         location: 開催場所
@@ -12,4 +15,22 @@ ja:
         end_time: 終了時刻
         event_message: 開催者メッセージ
         max_people: 最大人数
+        event_sts: イベントステータス
         res_message: ""
+      user:
+        password: パスワード
+        last_name: 苗字
+        first_name: 名前
+        last_name_kana: 苗字(カナ)
+        first_name_kana: 名前(カナ)
+        user_name: ユーザーネーム
+        email: メールアドレス
+        birthday: 生年月日
+        phone: 電話番号
+        image: アイコン画像
+        introduce: 自己紹介
+        user_sts: ユーザステータス
+      reserve:
+        event_id: イベントID
+        user_id: ユーザID
+        reserve_sts: 予約ステータス

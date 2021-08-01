@@ -49,12 +49,16 @@ class User < ActiveRecord::Base
   mount_uploader :image, ImageUploader
   has_many :events
 
+  VALID_DATE_REGEX = /\A\d{4}-\d{2}-\d{2}\z/
+
   validates :last_name, presence: true, length: {maximum: 20}
   validates :first_name, presence: true, length: {maximum: 20}
-  validates :last_name_kana, presence: true, length: {maximum: 40}, format: { with: /\A[\p{katakana}\p{blank}ー－]+\z/}
-  validates :first_name_kana, presence: true, length: {maximum: 40}, format: { with: /\A[\p{katakana}\p{blank}ー－]+\z/}
-  validates :email, presence: true, length: {maximum: 100}
-  validates :introduce, presence: true, length: {maximum: 255}
-
+  validates :last_name_kana, presence: true, length: {maximum: 40}, format: { with: /\A[\p{katakana}\p{blank}ー－]+\z/, message: "は全角カタカナで入力してください"}
+  validates :first_name_kana, presence: true, length: {maximum: 40}, format: { with: /\A[\p{katakana}\p{blank}ー－]+\z/, message: "は全角カタカナで入力してください"}
+  validates :user_name, presence: true, length: {maximum: 20}
+  validates :birthday, presence: true, format: {with: VALID_DATE_REGEX}
+  validates :phone, presence: true, length: {maximum: 11}, numericality: true
+  validates :introduce, length: {maximum: 255}
+  validates :user_sts, presence: true, length: {is: 1}
 
 end

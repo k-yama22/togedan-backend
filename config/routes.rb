@@ -9,8 +9,10 @@ Rails.application.routes.draw do
           get 'own'
           get 'history'
           post 'detail'
-          post 'search'
           post 'cancel'
+        end
+        collection do
+          post 'search'
         end
       end
       resources :reserves do

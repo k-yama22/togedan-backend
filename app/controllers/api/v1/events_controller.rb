@@ -6,7 +6,7 @@ module Api
 
       def index
         events = Event.order(created_at: :desc)
-        users = User.joins(:events).select("users.image,users.id, events.id AS event_id,events.event_name,events.genre,events.location,events.event_date,events.start_time,events.end_time,events.event_message,events.max_people").where(events: {event_sts: "1"})
+        users = User.joins(:events).select("users.image,users.id, events.id AS event_id,events.event_name,events.genre,events.location,events.event_date,events.start_time,events.end_time,events.event_message,events.max_people").where(events: {event_date: Date.today.., event_sts: "1"})
         render json: { status: 200, message: 'Loaded events', data: users }
       end
 
@@ -36,15 +36,16 @@ module Api
         genre = event_params[:genre]
         location = event_params[:location]
         event_date = event_params[:event_date]
-        if event_date.nil?
-          @events = User.joins(:events).select("users.image,users.id, events.id AS event_id,events.event_name,events.genre,events.location,events.event_date,events.start_time,events.end_time,events.event_message,events.max_people").where('genre LIKE(?) and location LIKE(?) and event_sts = ?', "%#{genre}%", "%#{location}%", "1")
+         
+        if event_date.blank?
+          @events = User.joins(:events).select("users.image,users.id, events.id AS event_id,events.event_name,events.genre,events.location,events.event_date,events.start_time,events.end_time,events.event_message,events.max_people").where('genre LIKE(?) and location LIKE(?) and event_date > (?) and event_sts = ?', "%#{genre}%", "%#{location}%", Date.today, "1")
           # @events = Event.where('genre LIKE(?) and location LIKE(?)', "%#{genre}%", "%#{location}%")
         else
           @events = User.joins(:events).select("users.image,users.id, events.id AS event_id,events.event_name,events.genre,events.location,events.event_date,events.start_time,events.end_time,events.event_message,events.max_people").where('genre LIKE(?) and location LIKE(?) and event_date = (?) and event_sts = ?', "%#{genre}%", "%#{location}%", "%#{event_date}%", "1")
           # @events = Event.where('genre LIKE(?) and location LIKE(?) and event_date = (?)', "%#{genre}%", "%#{location}%", "%#{event_date}%")
         end
-        # @events = Event.where('genre LIKE(?) and location LIKE(?) and event_date = (?)', "%#{genre}%", "%#{location}%", "%#{event_date}%")
-        render json: { status: 200, message: '検索が完了しました', data: @events }
+          # @events = Event.where('genre LIKE(?) and location LIKE(?) and event_date = (?)', "%#{genre}%", "%#{location}%", "%#{event_date}%")
+          render json: { status: 200, message: '検索が完了しました', data: @events }
       end
 
       def cancel

@@ -17,7 +17,7 @@ module Api
         @reserves = Reserve.where(user_id: params[:id], reserve_sts: "1")
         @events_arr = []
         for id in @reserves do
-          result = User.joins(:events).select("users.image, users.id, events.id AS event_id, events.event_name, events.genre, events.location, events.event_date, events.start_time, events.end_time, events.event_message, events.max_people").find_by(events: {id: id.event_id})
+          result = User.joins(:events).select("users.image, users.id, events.id AS event_id, events.event_name, events.genre, events.location, events.event_date, events.start_time, events.end_time, events.event_message, events.max_people").find_by(events: {id: id.event_id, event_sts: "1"})
           @events_arr.push(result)
           # if @events.length > 2
           #   break
@@ -40,7 +40,7 @@ module Api
       end
 
       def history
-        @reserves = Reserve.where(user_id: params[:id])
+        @reserves = Reserve.where(user_id: params[:id], reserve_sts: "1")
         # @my_history = @my_events.where(events: {event_date: ..Date.today})
         @events = []
         for id in @reserves do
@@ -52,7 +52,7 @@ module Api
       end
 
       def cancel
-        @reserve = Reserve.find_by(user_id: reserve_params[:user_id], event_id: reserve_params[:event_id])
+        @reserve = Reserve.find_by(user_id: reserve_params[:user_id], event_id: reserve_params[:event_id], reserve_sts: "1")
         # @reserve.destroy
         @reserve.update(reserve_sts: "2")
         render json: { status: 200, message: '予約キャンセルが完了しました。', data: @reserve }

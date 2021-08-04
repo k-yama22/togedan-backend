@@ -1,0 +1,4 @@
+<p>ようこそ <%= @email %>さん!</p>
+<p>まだ本登録は完了しておりません</p>
+<p>下記リンクから本登録を完了してください。</p>
+<p><%= link_to 'ユーザ認証を実行', confirmation_url(@resource, {confirmation_token: @token, config: message['client-config'].to_s, redirect_url: message['redirect-url']}).html_safe %></p>

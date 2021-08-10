@@ -4,13 +4,13 @@ module Auth
       def destroy
         if @resource
           @events = Event.where(user_id: @resource.id, event_sts: "1")
-
+          @reserves = Reserve.where(user_id: @resource.id, reserve_sts: "1")
           # 開催イベントチェックフラグ
           @event_flg = false
+          @reserve_flg = false
 
           # 開催予定のイベントチェック
           if !@events.blank?
-            today = Date.today;
             now = Time.now
             for event in @events do
               if (event.event_date.strftime("%Y-%m-%d") + " " + event.end_time.strftime("%H%M")) > now.strftime("%Y-%m-%d %H%M")
@@ -19,8 +19,21 @@ module Auth
             end
           end
 
+          # 参加予定の予約情報チェック
+          if !@reserves.blank?
+            now = Time.now
+            for reserve in @reserves do
+              result = User.joins(:events).select("users.image, users.id, events.id AS event_id, events.event_name, events.genre, events.location, events.event_date, events.start_time, events.end_time, events.event_message, events.max_people").find_by(events: {id: reserve.event_id, event_sts: "1"})
+              if (result.event_date.strftime("%Y-%m-%d") + " " + result.end_time.strftime("%H%M")) > now.strftime("%Y-%m-%d %H%M")
+                @reserve_flg = true
+              end
+            end
+          end
+
           if @event_flg
             render_destroy_event_error
+          elsif @reserve_flg
+            render_destroy_reserve_error
           else
             email = @resource.email
             time =  Time.current
@@ -41,6 +54,10 @@ module Auth
 
       def render_destroy_event_error
         render_error(400, '開催予定のイベントがあるため削除できません', status: 'error')
+      end
+
+      def render_destroy_reserve_error
+        render_error(400, '参加予定の予約情報があるため削除できません', status: 'error')
       end
 
       def sign_up_params

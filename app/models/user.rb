@@ -61,4 +61,41 @@ class User < ActiveRecord::Base
   validates :introduce, length: {maximum: 255}
   validates :user_sts, presence: true, length: {is: 1}
 
+
+  # イベント検索用SQL
+  # 共通
+  scope :events, -> {joins(:events)}
+  scope :select_event, -> {select("users.image,users.id, events.id AS event_id,events.event_name,events.genre,events.location,events.event_date,events.start_time,events.end_time,events.event_message,events.max_people")}
+
+  # 検索条件が通常の場合
+  scope :where_normal, -> (genre, location) {where('genre LIKE(?) and location LIKE(?) and event_date > (?) and event_sts = ?', "%#{genre}%", "%#{location}%", Date.today, "1")}
+  scope :normal, -> (genre, location) {events.select_event.where_normal(genre, location)}
+
+  # 検索条件がevent_dateの場合
+  scope :where_date, -> (genre, location, event_date) { where('genre LIKE(?) and location LIKE(?) and event_date = (?) and event_sts = ?', "%#{genre}%", "%#{location}%", "%#{event_date}%", "1") }
+  scope :date, -> (genre, location, event_date) { events.select_event.where_date(genre, location, event_date) }
+
+  # 検索条件がevent_dateかつstart_timeの場合
+  scope :where_date_start, -> (genre, location, event_date, start_time) { where('genre LIKE(?) and location LIKE(?) and event_date = (?) and start_time >= (?) and event_sts = ?', "%#{genre}%", "%#{location}%", "%#{event_date}%", "%#{start_time}%", "1") }
+  scope :date_start, -> (genre, location, event_date, start_time) { events.select_event.where_date_start(genre, location, event_date, start_time) }
+
+  # 検索条件がevent_dateかつend_timeの場合
+  scope :where_date_end, -> (genre, location, event_date, end_time) { where('genre LIKE(?) and location LIKE(?) and event_date = (?) and end_time <= (?) and event_sts = ?', "%#{genre}%", "%#{location}%", "%#{event_date}%", "%#{end_time}%", "1") }
+  scope :date_end, -> (genre, location, event_date, end_time) { events.select_event.where_date_end(genre, location, event_date, end_time) }
+
+  # 検索条件がevent_dateかつstart_timeかつend_timeの場合
+  scope :where_date_start_end, -> (genre, location, event_date, start_time, end_time) { where('genre LIKE(?) and location LIKE(?) and event_date = (?) and start_time >= (?) and end_time <= (?) and event_sts = ?', "%#{genre}%", "%#{location}%", "%#{event_date}%", "%#{start_time}%", "%#{end_time}%", "1") }
+  scope :date_start_end, -> (genre, location, event_date, start_time, end_time) { events.select_event.where_date_start_end(genre, location, event_date, start_time, end_time) }
+
+  # 検索条件がstart_timeの場合
+  scope :where_start_time, -> (genre, location, start_time) { events.select_event.where('genre LIKE(?) and location LIKE(?) and event_date > (?) and start_time >= (?) and event_sts = ?', "%#{genre}%", "%#{location}%", Date.today, "%#{start_time}%", "1") }
+  scope :start_time, -> (genre, location, start_time) { events.select_event.where_start_time(genre, location, start_time) }
+
+  # 検索条件がend_timeの場合
+  scope :where_end_time, -> (genre, location, end_time) { where('genre LIKE(?) and location LIKE(?) and event_date > (?) and end_time <= (?) and event_sts = ?', "%#{genre}%", "%#{location}%", Date.today, "%#{end_time}%", "1") }
+  scope :end_time, -> (genre, location, end_time) { events.select_event.where_end_time(genre, location, end_time) }
+
+  # 検索条件がstart_timeかつend_timeの場合
+  scope :where_start_end, -> (genre, location, start_time, end_time) { where('genre LIKE(?) and location LIKE(?) and event_date > (?) and start_time >= (?) and end_time <= (?) and event_sts = ?', "%#{genre}%", "%#{location}%", Date.today, "%#{start_time}%", "%#{end_time}%", "1") }
+  scope :start_end, -> (genre, location, start_time, end_time) { events.select_event.where_start_end(genre, location, start_time, end_time) }
 end

@@ -53,11 +53,11 @@ module Auth
       private
 
       def render_destroy_event_error
-        render_error(400, '開催予定のイベントがあるため削除できません', status: 'error')
+        render_error(400, '開催予定のイベントがあるため退会できません', status: 'error')
       end
 
       def render_destroy_reserve_error
-        render_error(400, '参加予定の予約情報があるため削除できません', status: 'error')
+        render_error(400, '参加予定の予約情報があるため退会できません', status: 'error')
       end
 
       def sign_up_params

@@ -37,7 +37,7 @@ module Api
         user_id = reserve_params[:user_id]
         @reserve = Reserve.find_by(event_id: event_id, user_id: user_id, reserve_sts: "1")
         if @reserve
-          @event = User.joins(:events).select("users.image,users.id, events.id AS event_id,events.event_name,events.genre,events.location,events.event_date,events.start_time,events.end_time,events.event_message,events.max_people").find_by(events: {id: @reserve.event_id})
+          @event = User.joins(:events).select("users.image,users.id, last_name, first_name, introduce, events.id AS event_id,events.event_name,events.genre,events.location,events.event_date,events.start_time,events.end_time,events.event_message,events.max_people").find_by(events: {id: @reserve.event_id})
           render json: { status: 200, message: '詳細情報の取得に成功しました。', data: @event }
         else
           render json: { status: "ERROR", message: '詳細情報の取得に失敗しました。', data: @reserve.errors }

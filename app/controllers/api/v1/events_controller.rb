@@ -28,7 +28,7 @@ module Api
       end
 
       def detail
-        @my_event = User.joins(:events).select("users.image,users.id, events.id AS event_id,events.event_name,events.genre,events.location,events.event_date,events.start_time,events.end_time,events.event_message,events.max_people").find_by(events: {id: event_params[:id], user_id: event_params[:user_id], event_sts: "1"})
+        @my_event = User.joins(:events).select("users.image,users.id, last_name, first_name, introduce, events.id AS event_id,events.event_name,events.genre,events.location,events.event_date,events.start_time,events.end_time,events.event_message,events.max_people").find_by(events: {id: event_params[:id], user_id: event_params[:user_id], event_sts: "1"})
         render json: { status: 200, message: 'Loaded the my events', data: @my_event }
       end
 

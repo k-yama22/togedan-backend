@@ -62,9 +62,9 @@ module Api
             end
           else
             if @end_time.blank?
-              User.date_start(@genre, @location, @event_date, @start_time)
+              @events = User.date_start(@genre, @location, @event_date, @start_time)
             else
-              User.date_start_end(@genre, @location, @event_date, @start_time, @end_time)
+              @events = User.date_start_end(@genre, @location, @event_date, @start_time, @end_time)
             end
           end
         end

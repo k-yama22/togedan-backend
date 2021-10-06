@@ -1,24 +1,8 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Together Danceのバックエンド側リポジトリ
 
-Things you may want to cover:
+サービス概要や使用技術等は下記フロントエンド側リポジトリのREADMEにまとめて記載しております。
 
-* Ruby version
+[`README`](https://github.com/k-yama22/togedan-frontend#readme)
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
